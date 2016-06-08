@@ -35,12 +35,16 @@ def clientthread(conn):
     while True:
 
         # Receiving from client
-        data = conn.recv(1024)
-        reply = 'OK...' + data
+        buff = 1024
+        data = ''
+        while '\n' not in data:
+            data += conn.recv(buff)
+        print data
         if not data:
+            print "tutu"
             break
 
-        conn.sendall(reply)
+        conn.sendall(data)
 
     # came out of loop
     conn.close()
