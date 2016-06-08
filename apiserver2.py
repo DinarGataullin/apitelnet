@@ -1,18 +1,15 @@
-'''
-    Simple socket server using threads
-'''
-
 import socket
 import sys
 from thread import *
 
-HOST = ''  # Symbolic name meaning all available interfaces
-PORT = 8000  # Arbitrary non-privileged port
+HOST = ''
+PORT = 8000
+FUNCSPUB = ['getrate', 'getvendors', 'getpublicproduct', 'getsellrate']
+FUNCSPRIVATE = ['getbalance', 'getdailyusagebydestination', 'getgailyotalusage', 'getdailyusagebytrunk', 'getdailyusagebyvendor', 'gettrunklist', 'getroutingfortrunk', 'adddestinationtotrunk', 'removedestinatinofromtrunk', 'checkcdr']
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
 
-# Bind socket to local host and port
 try:
     s.bind((HOST, PORT))
 except socket.error as msg:
@@ -21,32 +18,31 @@ except socket.error as msg:
 
 print 'Socket bind complete'
 
-# Start listening on socket
-s.listen(10)
+s.listen(1000)
 print 'Socket now listening'
 
+def parsetelnet(recived):
+    recived = recived.split(' ')
+    if recived[0].lower() in FUNCSPUB:
+        return "public"
+    elif recived[0].lower() in FUNCSPRIVATE:
+        return "private"
+    else:
+        return recived
 
-# Function for handling connections. This will be used to create threads
 def clientthread(conn):
-    # Sending message to connected client
-    conn.send('Welcome to the server. Type something and hit enter\n')  # send only takes string
+    conn.send('Welcome to the server. Type something and hit enter\n')
 
-    # infinite loop so that function do not terminate and thread do not end.
     while True:
 
-        # Receiving from client
         buff = 1024
         data = ''
         while '\n' not in data:
             data += conn.recv(buff)
-        print data
-        if not data:
-            print "tutu"
-            break
+        res = parsetelnet(data)
+        print res
+        #conn.sendall(data)
 
-        conn.sendall(data)
-
-    # came out of loop
     conn.close()
 
 
