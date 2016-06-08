@@ -1,5 +1,6 @@
 import socket
 import sys
+import sqlite3
 from thread import *
 
 HOST = ''
@@ -8,7 +9,6 @@ FUNCSPUB = ['getrate', 'getvendors', 'getpublicproduct', 'getsellrate']
 FUNCSPRIVATE = ['getbalance', 'getdailyusagebydestination', 'getgailyotalusage', 'getdailyusagebytrunk', 'getdailyusagebyvendor', 'gettrunklist', 'getroutingfortrunk', 'adddestinationtotrunk', 'removedestinatinofromtrunk', 'checkcdr']
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print 'Socket created'
 
 try:
     s.bind((HOST, PORT))
@@ -16,22 +16,21 @@ except socket.error as msg:
     print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
 
-print 'Socket bind complete'
-
 s.listen(1000)
-print 'Socket now listening'
+
 
 def parsetelnet(recived):
-    recived = recived.split(' ')
+    recived = recived[:-2].split(' ')
     if recived[0].lower() in FUNCSPUB:
-        return "public"
+        return "public: " + recived[0]
     elif recived[0].lower() in FUNCSPRIVATE:
-        return "private"
+        return "private: " + recived[0]
     else:
         return recived
 
+
 def clientthread(conn):
-    conn.send('Welcome to the server. Type something and hit enter\n')
+    conn.send('Hello! Enter function name and parameters\r\nLike this: GetRate Vendor,Destionation\r\n')
 
     while True:
 
@@ -41,18 +40,13 @@ def clientthread(conn):
             data += conn.recv(buff)
         res = parsetelnet(data)
         print res
-        #conn.sendall(data)
+        conn.sendall(''.join(res)+'\r\n')
 
     conn.close()
 
-
-# now keep talking with the client
 while 1:
-    # wait to accept a connection - blocking call
     conn, addr = s.accept()
-    print 'Connected with ' + addr[0] + ':' + str(addr[1])
-
-    # start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
+    print 'Connected client: ' + addr[0] + ':' + str(addr[1])
     start_new_thread(clientthread, (conn,))
 
 s.close()
