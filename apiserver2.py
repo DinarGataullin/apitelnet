@@ -92,8 +92,11 @@ def adduser(username, password):
     if username and password:
         cur = dbconnect(DBPARAMS)
         query = "insert into apiserver (username, password) values (\'{0}\',\'{1}\')".format(username, hash_password(password))
-        cur.execute(query)
-        return True
+        try:
+            cur.execute(query)
+            return True
+        except:
+            return False
     else:
         return False
 
@@ -118,7 +121,6 @@ def client_thread(conn, clientip):
         res = parse_telnet(data, clientip)
         print res+'\r\n'
         conn.sendall(''.join(res)+'\r\n')
-
     conn.close()
 
 
