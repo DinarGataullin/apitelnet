@@ -13,7 +13,7 @@ from thread import *
 logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'apisever.log')
 # api port and all interfaces
 HOST = ''
-PORT = 8000
+PORT = 8881
 # public functions
 FUNCSPUB = ['getrate', 'getvendors', 'getpublicproduct', 'getsellrate']
 # private functions
