@@ -90,7 +90,7 @@ def authtoken(username, password):
 def adduser(username, password):
     if username and password:
         cur = dbconnect(DBPARAMS)
-        query = "insert into apiserver (username, password) values ({0},{1})".format(username, password)
+        query = "insert into apiserver (username, password) values ('{0}','{1}')".format(username, password)
         cur.execute(query)
         return True
     else:
