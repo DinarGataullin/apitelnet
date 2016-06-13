@@ -94,7 +94,7 @@ def adduser(username, password):
         query = "insert into apiserver (username, password) values (\'{0}\',\'{1}\')".format(username, hash_password(password))
         try:
             cur.execute(query)
-            return True
+            return authtoken(username, password)
         except:
             return False
     else:
@@ -119,7 +119,7 @@ def client_thread(conn, clientip):
         while '\n' not in data:
             data += conn.recv(buff)
         res = parse_telnet(data, clientip)
-        print res+'\r\n'
+        print str(res)+'\r\n'
         conn.sendall(''.join(res)+'\r\n')
     conn.close()
 
