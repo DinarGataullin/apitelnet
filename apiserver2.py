@@ -129,6 +129,7 @@ def main():
         print 'Port opened!'
         logging.info('Port opened')
     except socket.error as msg:
+        print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
         logging.error('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
         sys.exit()
 
