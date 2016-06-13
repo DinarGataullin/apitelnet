@@ -96,9 +96,9 @@ def adduser(username, password):
             cur.execute(query)
             return authtoken(username, password)
         except:
-            return False
+            return "Error"
     else:
-        return False
+        return "Specify username or password"
 
 def check_token(token):
     cur = dbconnect(DBPARAMS)
