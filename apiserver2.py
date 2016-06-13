@@ -31,7 +31,7 @@ def dbconnect(params):
         pgcon = psycopg2.connect(**params)
         cur = pgcon.cursor(cursor_factory=psycopg2.extensions.cursor)
         logging.info('Connected to Database succefully')
-        return cur
+        return cur, pgcon
     except:
         logging.error('DB connect error!')
         return None
@@ -65,7 +65,7 @@ def check_password(hashed_password, user_password):
 
 # take token for auth
 def authtoken(username, password):
-    cur = dbconnect(DBPARAMS)
+    cur, pgcon = dbconnect(DBPARAMS)
     query = "SELECT * FROM apiserver WHERE username=\'{0}\'".format(username)
     cur.execute(query)
     row = cur.fetchone()
@@ -89,9 +89,12 @@ def authtoken(username, password):
 
 def adduser(username, password):
     if username and password:
-        cur = dbconnect(DBPARAMS)
+        cur, pgcon = dbconnect(DBPARAMS)
         query = "insert into apiserver (username, password) values (\'{0}\',\'{1}\')".format(username, password)
         cur.execute(query)
+        pgcon.commit()
+        cur.close()
+        pgcon.close()
         return True
     else:
         return False
