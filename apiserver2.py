@@ -41,10 +41,7 @@ def dbconnect(params):
 def parse_telnet(recived, clientip):
     recived = recived[:-2]
     if recived.split(' ')[0] == 'adduser':
-        if adduser(recived.split(' ')[1], recived.split(' ')[2]):
-            return "User added!"
-        else:
-            return "Error user adding!"
+        return adduser(recived.split(' ')[1], recived.split(' ')[2])
 
     # check in first data is token
     if recived.split(':')[0]=='token':
