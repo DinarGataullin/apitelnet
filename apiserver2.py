@@ -10,7 +10,7 @@ import psycopg2
 import psycopg2.extensions
 from thread import *
 
-logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'apisever.log')
+logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'logserver.log')
 # api port and all interfaces
 HOST = ''
 PORT = 8881
