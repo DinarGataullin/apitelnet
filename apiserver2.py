@@ -39,7 +39,7 @@ def dbconnect(params):
 # parse telnet input
 def parse_telnet(recived, clientip):
     recived = recived[:-2]
-    if recived.spit(' ')[0] == 'adduser':
+    if recived.split(' ')[0] == 'adduser':
         if adduser(recived.split(' ')[1], recived.split(' ')[2]):
             return "User added!"
         else:
@@ -126,6 +126,7 @@ def main():
 
     try:
         s.bind((HOST, PORT))
+        print 'Port opened!'
         logging.info('Port opened')
     except socket.error as msg:
         logging.error('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
