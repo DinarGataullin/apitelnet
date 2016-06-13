@@ -120,7 +120,7 @@ def client_thread(conn, clientip):
             data += conn.recv(buff)
         res = parse_telnet(data, clientip)
         print str(res)+'\r\n'
-        conn.sendall(''.join(res)+'\r\n')
+        conn.sendall(''.join(str(res))+'\r\n')
     conn.close()
 
 
