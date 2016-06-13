@@ -66,7 +66,7 @@ def check_password(hashed_password, user_password):
 # take token for auth
 def authtoken(username, password):
     cur = dbconnect(DBPARAMS)
-    query = "SELECT * FROM apiserver WHERE username="+username
+    query = "SELECT * FROM apiserver WHERE username=\'{0}\'".format(username)
     cur.execute(query)
     row = cur.fetchone()
     if row:
@@ -78,7 +78,7 @@ def authtoken(username, password):
                 token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
                 #token for 1 day
                 tokenexpiration = time.time() + 24*60*60
-                query = "UPDATE apiserver SET token={0}, tokenexpiration={1} WHERE username={2}".format(token, tokenexpiration, username)
+                query = "UPDATE apiserver SET token=\'{0}\', tokenexpiration=\'{1}\' WHERE username=\'{2}\'".format(token, tokenexpiration, username)
                 cur.execute(query)
                 return token
         else:
@@ -98,7 +98,7 @@ def adduser(username, password):
 
 def check_token(token):
     cur = dbconnect(DBPARAMS)
-    query = "SELECT * FROM apiserver WHERE token="+token
+    query = "SELECT * FROM apiserver WHERE token=\'{0}\'".format(token)
     cur.execute(query)
     row = cur.fetchone()
     if row and float(row[3])>time.time():
