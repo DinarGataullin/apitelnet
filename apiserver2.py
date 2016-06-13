@@ -39,6 +39,12 @@ def dbconnect(params):
 # parse telnet input
 def parse_telnet(recived, clientip):
     recived = recived[:-2]
+    if recived.spit(' ')[0] == 'adduser':
+        if adduser(recived.split(' ')[1], recived.split(' ')[2]):
+            return "User added!"
+        else:
+            return "Error user adding!"
+
     # check in first data is token
     if recived.split(':')[0]=='token':
         if recived.split(':')[1].split(' ')[0].lower() in FUNCSPRIVATE:
@@ -80,6 +86,15 @@ def authtoken(username, password):
     else:
         return "Username or password incorrect"
 
+
+def adduser(username, password):
+    if username and password:
+        cur = dbconnect(DBPARAMS)
+        query = "insert into apiserver (username, password) values ({0},{1})".format(username, password)
+        cur.execute(query)
+        return True
+    else:
+        return False
 
 def check_token(token):
     cur = dbconnect(DBPARAMS)
